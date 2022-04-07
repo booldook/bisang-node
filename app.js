@@ -2,6 +2,7 @@
 const express = require('express');
 const app = express();
 const path = require('path');
+const axios = require('axios');
 
 /* require router */
 const boardRouter = require('./routes/board');
@@ -14,8 +15,17 @@ app.set('views', './views');
 app.use('/', express.static(path.join(__dirname, 'public')));
 
 /* page router */
-app.get('/', (req, res, next) => {
-	res.render('home', { title: 'HOME' });
+app.get('/', async (req, res, next) => {
+	try {
+		const userURL = 'https://jsonplaceholder.typicode.com/users';
+		const { data: users } = await axios.get(userURL);
+		// res.status(200).json(users);
+		res.render('home', { title: 'HOME', users });
+
+	}
+	catch(err) {
+
+	}
 });
 
 app.use('/board', boardRouter);
