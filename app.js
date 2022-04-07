@@ -15,7 +15,7 @@ app.use('/', express.static(path.join(__dirname, 'public')));
 
 /* page router */
 app.get('/', (req, res, next) => {
-	res.send('<h1>HOME</h1>');
+	res.render('home', { title: 'HOME' });
 });
 
 app.use('/board', boardRouter);
