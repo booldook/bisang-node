@@ -7,6 +7,8 @@ const app = express();
 const axios = require('axios');
 const createError = require('http-errors');
 const { mysql, pool } = require('./modules/mysql-init');
+const { globalLogger } = require('./middlewares/logger-mw')
+
 
 /* require router */
 const postsRouter = require('./routes/post/posts-router');
@@ -20,15 +22,20 @@ app.set('views', './views');
 app.locals.pretty = true;
 app.locals.headTitle = '비상교육-nodejs';
 
-// 로그인, 인증, 로그, 세션/쿠키, 첨부파일
-app.use((req, res, next) => {  // Middleware
-	req.myName = 'booldook';
-	next();
-})
+/* logger */
+app.use(globalLogger('tiny', 'tiny.log'));
 
 /* static router */
 app.use('/', express.static(path.join(__dirname, 'public')));
 
+/* logger */
+app.use(globalLogger('combined', 'access.log'));
+
+// 로그인, 인증, 로그, 세션/쿠키, 첨부파일 - Middleware // hook, 선처리
+app.use((req, res, next) => {
+	req.myName = 'booldook';
+	next();
+})
 /* page router */
 /* app.get('/', async (req, res, next) => {
 	try {
@@ -50,4 +57,4 @@ app.use(notFoundRouter);
 app.use(errorRouter);
 
 /* server init */
-app.listen(PORT, () => console.log('Server Running : http://127.0.0.1:' + PORT));
+app.listen(process.env.PORT, () => console.log('Server Running : http://127.0.0.1:' + process.env.PORT));
