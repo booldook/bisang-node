@@ -19,8 +19,10 @@
 		"fs-extra": "^10.0.1",
 		"http-errors": "^2.0.0",
 		"moment": "^2.29.2",
+		"morgan": "^1.10.0",
 		"mysql2": "^2.3.3",
-		"pug": "^3.0.2"
+		"pug": "^3.0.2",
+		"rotating-file-stream": "^3.0.3"
 	},
 	"devDependencies": {
 		"cross-env": "^7.0.3"

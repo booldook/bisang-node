@@ -15,7 +15,7 @@ router.get(['/', '/:page'], async (req, res, next) => {
       return v;
     })
     // res.json(rs);
-    res.render('post/list', { title: '포스트 리스트', posts  })
+    res.render('post/list', { title: req.myName, posts  })
   }
   catch(err) {
     next(createError(500, err))

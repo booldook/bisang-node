@@ -20,6 +20,12 @@ app.set('views', './views');
 app.locals.pretty = true;
 app.locals.headTitle = '비상교육-nodejs';
 
+// 로그인, 인증, 로그, 세션/쿠키, 첨부파일
+app.use((req, res, next) => {  // Middleware
+	req.myName = 'booldook';
+	next();
+})
+
 /* static router */
 app.use('/', express.static(path.join(__dirname, 'public')));
 
