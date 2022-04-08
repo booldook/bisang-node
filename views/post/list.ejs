@@ -1,0 +1,25 @@
+<%- include('../include/header.ejs') %>
+<h1 style="margin: 1em 0;">POST / <%= title %></h1>
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th>번호</th>
+      <th>작성자</th>
+      <th>제목</th>
+      <th>내용</th>
+      <th>작성일</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% for(let { idx, title, writer, content, wdate } of posts) { %>
+      <tr>
+        <td><%= idx %></td>
+        <td><%= writer %></td>
+        <td><%= title %></td>
+        <td><%= content %></td>
+        <td><%= wdate %></td>
+      </tr>
+    <% } %>
+  </tbody>
+</table>
+<%- include('../include/footer.ejs') %>
