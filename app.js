@@ -1,15 +1,16 @@
 /* require global */
 const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '.env.' + process.env.NODE_ENV) });
+const { PORT } = process.env;
 const express = require('express');
 const app = express();
 const axios = require('axios');
-const createError = require('http-errors')
-
-console.log(process.env.NODE_ENV);
+const createError = require('http-errors');
+const { mysql, pool } = require('./modules/mysql-init');
 
 /* require router */
-const boardRouter = require('./routes/board');
+const postsRouter = require('./routes/post/posts-router');
+const postRouter = require('./routes/post/post-router');
 const notFoundRouter = require('./routes/error/err404-router')
 const errorRouter = require('./routes/error/err-router')
 
@@ -23,7 +24,7 @@ app.locals.headTitle = '비상교육-nodejs';
 app.use('/', express.static(path.join(__dirname, 'public')));
 
 /* page router */
-app.get('/', async (req, res, next) => {
+/* app.get('/', async (req, res, next) => {
 	try {
 		const userURL = 'https://jsonplaceholder.typicode.com/users';
 		const { data: users } = await axios.get(userURL);
@@ -33,13 +34,14 @@ app.get('/', async (req, res, next) => {
 	catch(err) {
 		next(createError(500, err));
 	}
-});
+}); */
 
-app.use('/board', boardRouter);
+app.use('/posts', postsRouter);
+app.use('/post', postRouter);
 
 /* Error Router */
 app.use(notFoundRouter);
 app.use(errorRouter);
 
 /* server init */
-app.listen(process.env.PORT, () => console.log('Server Running : http://127.0.0.1:' + process.env.PORT));
+app.listen(PORT, () => console.log('Server Running : http://127.0.0.1:' + PORT));
