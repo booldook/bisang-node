@@ -4,9 +4,9 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"dev": "nodemon app",
-		"test": "nodemon app",
-		"build": "pm2 start app.js"
+		"dev": "cross-env NODE_ENV=dev nodemon app",
+		"test": "cross-env NODE_ENV=test nodemon app",
+		"serve": "cross-env NODE_ENV=prod pm2 start app.js"
 	},
 	"keywords": [],
 	"author": "",
@@ -21,5 +21,8 @@
 		"moment": "^2.29.2",
 		"mysql2": "^2.3.3",
 		"pug": "^3.0.2"
+	},
+	"devDependencies": {
+		"cross-env": "^7.0.3"
 	}
 }

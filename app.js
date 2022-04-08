@@ -1,9 +1,12 @@
 /* require global */
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '.env.' + process.env.NODE_ENV) });
 const express = require('express');
 const app = express();
-const path = require('path');
 const axios = require('axios');
 const createError = require('http-errors')
+
+console.log(process.env.NODE_ENV);
 
 /* require router */
 const boardRouter = require('./routes/board');
@@ -13,6 +16,8 @@ const errorRouter = require('./routes/error/err-router')
 /* view init */
 app.set('view engine', 'ejs');
 app.set('views', './views');
+app.locals.pretty = true;
+app.locals.headTitle = '비상교육-nodejs';
 
 /* static router */
 app.use('/', express.static(path.join(__dirname, 'public')));
@@ -37,4 +42,4 @@ app.use(notFoundRouter);
 app.use(errorRouter);
 
 /* server init */
-app.listen(3000, () => console.log('Server Running : http://127.0.0.1:3000'));
+app.listen(process.env.PORT, () => console.log('Server Running : http://127.0.0.1:' + process.env.PORT));
