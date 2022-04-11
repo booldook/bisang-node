@@ -4,12 +4,10 @@ const createError = require('http-errors');
 const moment = require('moment');
 
 const { pool } = require('../../modules/mysql-init');
-const { routerLogger } = require('../../middlewares/logger-mw')
+const logger = require('../../middlewares/logger-mw');
+const { isUser } = require('../../middlewares/auth-mw');
 
-router.get(['/', '/:page'], routerLogger('combined', 'posts.log'), (req, res, next) => {
-  console.log('MW2');
-  next();
-}, async (req, res, next) => {
+router.get(['/', '/:page'], logger('common', 'access-posts.log'), isUser, async (req, res, next) => {
   try {
     const startIdx = ((Number(req.params.page) || 1) - 1) * 2;
     const sql = 'SELECT * FROM post ORDER BY idx DESC LIMIT ?, 2';

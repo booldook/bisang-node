@@ -1,14 +1,13 @@
 /* require global */
 const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '.env.' + process.env.NODE_ENV) });
-const { PORT } = process.env;
 const express = require('express');
 const app = express();
-const axios = require('axios');
-const createError = require('http-errors');
-const { mysql, pool } = require('./modules/mysql-init');
-const { globalLogger } = require('./middlewares/logger-mw')
-
+// const axios = require('axios');
+// const createError = require('http-errors');
+// const { mysql, pool } = require('./modules/mysql-init');
+const logger = require('./middlewares/logger-mw')
+const { mw1, mw2 } = require('./middlewares/middleware');
 
 /* require router */
 const postsRouter = require('./routes/post/posts-router');
@@ -22,20 +21,25 @@ app.set('views', './views');
 app.locals.pretty = true;
 app.locals.headTitle = '비상교육-nodejs';
 
-/* logger */
-app.use(globalLogger('tiny', 'tiny.log'));
-
-/* static router */
-app.use('/', express.static(path.join(__dirname, 'public')));
-
-/* logger */
-app.use(globalLogger('combined', 'access.log'));
-
+/* middleware */
 // 로그인, 인증, 로그, 세션/쿠키, 첨부파일 - Middleware // hook, 선처리
 app.use((req, res, next) => {
-	req.myName = 'booldook';
+	req.user = { name: 'booldook', lev: 3 }
 	next();
-})
+});
+app.use(mw1);
+app.use(mw2('Hello'));
+
+/* logger */
+app.use(logger('tiny', 'access-all.log'));
+
+/* static router */
+app.use('/', express.static(path.join(__dirname, 'public'))); // html, css, js, images/movie/audio
+
+/* logger */
+app.use(logger());
+
+
 /* page router */
 /* app.get('/', async (req, res, next) => {
 	try {

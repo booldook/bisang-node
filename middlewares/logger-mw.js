@@ -2,23 +2,13 @@ const morgan = require('morgan');
 const rfs = require('rotating-file-stream');
 const path = require('path');
 
-const options = {
+module.exports = (type = 'combined', fileName = 'access.log') => {
+  const options = {
     size: "10M", // rotate every 10 MegaBytes written
     compress: "gzip", // compress rotated files
     interval: '1d', // rotate daily
+    path: path.join(__dirname, '../', 'log')
   }
-  
-  const globalLogger = (type, fileName) => {
-    const stream = rfs.createStream(fileName, { ...options,  path: path.join(__dirname, '../', 'log')});
-    return morgan(type, { stream });
-  }
-
-const routerLogger = (type, fileName) => {
-  return (req, res, next) => {
-    const stream = rfs.createStream(fileName, { ...options,  path: path.join(__dirname, '../', 'log')});
-    req.app.use(morgan(type, { stream }));
-    next();
-  }
+  const stream = rfs.createStream(fileName, options);
+  return morgan(type, { stream }); // (req, res, next) => { ... next();}
 }
-
-module.exports = { globalLogger, routerLogger }

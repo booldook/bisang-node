@@ -13,9 +13,10 @@ const express = require('express');
 const router = express.Router();
 const createError = require('http-errors');
 const { pool } = require('../../modules/mysql-init');
+const { isAdmin } = require('../../middlewares/auth-mw');
 
 
-router.get('/', async (req, res, next) => {
+router.get('/', isAdmin, async (req, res, next) => {
   try {
     // const sql = 'INSERT INTO post SET title=?, content=?, writer=?, wdate=?';
     const sql = 'INSERT INTO post (title, content, writer, wdate) values (?, ?, ?, ?)';
