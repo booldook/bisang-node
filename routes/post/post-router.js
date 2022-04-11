@@ -9,6 +9,7 @@ semantic ULR
 [DELETE] /post/1                 - 게시글 삭제
 */
 
+const path = require('path');
 const express = require('express');
 const router = express.Router();
 const createError = require('http-errors');
@@ -17,17 +18,22 @@ const { pool } = require('../../modules/mysql-init');
 const { isAdmin, isUser } = require('../../middlewares/auth-mw');
 const { getIsoDate } = require('../../modules/utils')
 
+const multer  = require('multer');
+const { pathExists } = require('fs-extra');
+const uploader = multer({ dest: path.join(__dirname, '../../', '/storages') })
+
 
 router.get('/', isUser, (req, res, next) => {
   res.render('post/form');
 });
 
-router.post('/', isUser, async (req, res, next) => {
+router.post('/', isUser, uploader.single('upfile'), async (req, res, next) => {
   try {
     const { title, writer, content } = req.body;
     const sql = 'INSERT INTO post SET title=?, writer=?, content=?, wdate=?';
     const rs = await pool.execute(sql, [title, writer, content, new Date()]);
-    res.redirect('/posts');
+    res.json(req.file);
+    // res.redirect('/posts');
   }
   catch(err) {
     next(createError(500, err))

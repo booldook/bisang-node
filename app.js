@@ -40,6 +40,7 @@ app.use(logger('tiny', 'access-all.log'));
 
 /* static router */
 app.use('/', express.static(path.join(__dirname, 'public'))); // html, css, js, images/movie/audio
+app.use('/uploads', express.static(path.join(__dirname, 'storages'))); // html, css, js, images/movie/audio
 
 /* logger */
 app.use(logger());

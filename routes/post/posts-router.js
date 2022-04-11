@@ -28,7 +28,7 @@ router.get(['/', '/:page'], logger('common', 'access-posts.log'), isUser, async 
       v.wdate = moment(v.wdate).format('YYYY-MM-DD');
       return v;
     });
-    res.render('post/list', { title: 'TITLE', posts, ...pager })
+    res.status(200).render('post/list', { title: 'TITLE', posts, ...pager })
   }
   catch(err) {
     next(createError(500, err))
