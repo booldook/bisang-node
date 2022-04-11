@@ -22,7 +22,10 @@ router.get('/', isUser, (req, res, next) => {
 
 router.post('/', isUser, async (req, res, next) => {
   try {
-    res.send('저장됨');
+    const { title, writer, content } = req.body;
+    const sql = 'INSERT INTO post SET title=?, writer=?, content=?, wdate=?';
+    const rs = await pool.execute(sql, [title, writer, content, new Date()]);
+    res.redirect('/posts');
   }
   catch(err) {
     next(createError(500, err))

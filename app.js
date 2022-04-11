@@ -22,13 +22,18 @@ app.locals.pretty = true;
 app.locals.headTitle = '비상교육-nodejs';
 
 /* middleware */
+// POST(form-data) 처리를 위한 미들웨어
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
+
 // 로그인, 인증, 로그, 세션/쿠키, 첨부파일 - Middleware // hook, 선처리
 app.use((req, res, next) => {
 	req.user = { name: 'booldook', lev: 3 }
 	next();
 });
-app.use(mw1);
-app.use(mw2('Hello'));
+// app.use(mw1);
+// app.use(mw2('Hello'));
 
 /* logger */
 app.use(logger('tiny', 'access-all.log'));
