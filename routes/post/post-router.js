@@ -13,21 +13,21 @@ const express = require('express');
 const router = express.Router();
 const createError = require('http-errors');
 const { pool } = require('../../modules/mysql-init');
-const { isAdmin } = require('../../middlewares/auth-mw');
+const { isAdmin, isUser } = require('../../middlewares/auth-mw');
 
 
-router.get('/', isAdmin, async (req, res, next) => {
+router.get('/', isUser, (req, res, next) => {
+  res.render('post/form');
+});
+
+router.post('/', isUser, async (req, res, next) => {
   try {
-    // const sql = 'INSERT INTO post SET title=?, content=?, writer=?, wdate=?';
-    const sql = 'INSERT INTO post (title, content, writer, wdate) values (?, ?, ?, ?)';
-    const values = ['홍길동전', '아버지를 아버지라...', '길동이', new Date()];
-    const rs = await pool.execute(sql, values);
-    res.json(rs)
+    res.send('저장됨');
   }
   catch(err) {
     next(createError(500, err))
   }
-})
+});
 
 router.get('/:idx', (req, res, next) => {
   res.send('게시글상세');
