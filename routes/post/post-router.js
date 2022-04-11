@@ -20,7 +20,8 @@ const { getIsoDate } = require('../../modules/utils')
 
 const multer  = require('multer');
 const { pathExists } = require('fs-extra');
-const uploader = multer({ dest: path.join(__dirname, '../../', '/storages') })
+// const uploader = multer({ dest: path.join(__dirname, '../../', '/storages') })
+const uploader = require('../../middlewares/multer-mw');
 
 
 router.get('/', isUser, (req, res, next) => {
@@ -30,10 +31,17 @@ router.get('/', isUser, (req, res, next) => {
 router.post('/', isUser, uploader.single('upfile'), async (req, res, next) => {
   try {
     const { title, writer, content } = req.body;
-    const sql = 'INSERT INTO post SET title=?, writer=?, content=?, wdate=?';
-    const rs = await pool.execute(sql, [title, writer, content, new Date()]);
-    res.json(req.file);
-    // res.redirect('/posts');
+    let sql = 'INSERT INTO post SET title=?, writer=?, content=?, wdate=?';
+    let values = [title, writer, content, new Date() ];
+    if(req.file) {
+      sql += ', oriname=?, savename=?, filesize=?';
+      values.push(req.file.originalname);
+      values.push(req.file.filename);
+      values.push(req.file.size);
+    }
+    const rs = await pool.execute(sql, values);
+    // res.json(req.file);
+    res.redirect('/posts');
   }
   catch(err) {
     next(createError(500, err))
