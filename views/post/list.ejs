@@ -4,9 +4,9 @@
   <thead>
     <tr>
       <th>번호</th>
-      <th>작성자</th>
       <th>제목</th>
       <th>내용</th>
+      <th>작성자</th>
       <th>작성일</th>
     </tr>
   </thead>
@@ -14,9 +14,9 @@
     <% for(let { idx, title, writer, content, wdate } of posts) { %>
       <tr>
         <td><%= idx %></td>
-        <td><%= writer %></td>
-        <td><%= title %></td>
+        <td><a href="/post/<%= idx %>"><%= title %></a></td>
         <td><%= content %></td>
+        <td><%= writer %></td>
         <td><%= wdate %></td>
       </tr>
     <% } %>

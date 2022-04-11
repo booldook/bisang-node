@@ -33,7 +33,8 @@ router.post('/', isUser, async (req, res, next) => {
 });
 
 router.get('/:idx', (req, res, next) => {
-  res.send('게시글상세');
+  // 여기를 구현
+  res.render('post/view');
 })
 
 router.get('/:idx/update', (req, res, next) => {

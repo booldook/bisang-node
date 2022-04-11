@@ -1,0 +1,41 @@
+<%- include ('../include/header.ejs') %>
+<style>
+  .title {
+    width: 200px; background-color: #efefef; font-weight: bold;
+  }
+</style>
+<div class="container mt-5">
+  <h1 class="mb-3">글 상세보기</h1>
+  <hr>
+  <table class="table">
+    <tbody>
+      <tr>
+        <td class="title">번호</td>
+        <td class="content"></td>
+      </tr>
+      <tr>
+        <td class="title">제목</td>
+        <td class="content"></td>
+      </tr>
+      <tr>
+        <td class="title">내용</td>
+        <td class="content"></td>
+      </tr>
+      <tr>
+        <td class="title">작성자</td>
+        <td class="content"></td>
+      </tr>
+      <tr>
+        <td class="title">작성일</td>
+        <td class="content"></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="text-center my-3">
+    <button class="btn btn-primary" onclick="location.href='/posts'">리스트</button>
+    <button class="btn btn-danger">삭제</button>
+    <button class="btn btn-info">수정</button>
+  </div>
+</div>
+
+<%- include ('../include/footer.ejs') %>
