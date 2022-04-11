@@ -12,8 +12,10 @@ semantic ULR
 const express = require('express');
 const router = express.Router();
 const createError = require('http-errors');
+const moment = require('moment');
 const { pool } = require('../../modules/mysql-init');
 const { isAdmin, isUser } = require('../../middlewares/auth-mw');
+const { getIsoDate } = require('../../modules/utils')
 
 
 router.get('/', isUser, (req, res, next) => {
@@ -32,9 +34,18 @@ router.post('/', isUser, async (req, res, next) => {
   }
 });
 
-router.get('/:idx', (req, res, next) => {
-  // 여기를 구현
-  res.render('post/view');
+router.get('/:idx', async (req, res, next) => {
+  try {
+    // 여기를 구현
+    const sql = 'SELECT * FROM post WHERE idx=?';
+    const [[rs]] = await pool.execute(sql, [req.params.idx]);
+    rs.wdate = getIsoDate(rs.wdate);
+    res.render('post/view', { ...rs });
+    // res.json(rs);
+  }
+  catch(err) {
+    next(createError(500, err))
+  }
 })
 
 router.get('/:idx/update', (req, res, next) => {
