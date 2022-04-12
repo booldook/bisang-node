@@ -8,6 +8,7 @@ const app = express();
 // const { mysql, pool } = require('./modules/mysql-init');
 const logger = require('./middlewares/logger-mw')
 const { mw1, mw2 } = require('./middlewares/middleware');
+const expressSession = require('./middlewares/session-mw');
 
 /* require router */
 const postsRouter = require('./routes/post/posts-router');
@@ -27,6 +28,9 @@ app.locals.headTitle = '비상교육-nodejs';
 // POST(form-data) 처리를 위한 미들웨어
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+/* session */
+app.use(expressSession(app));
 
 
 // 로그인, 인증, 로그, 세션/쿠키, 첨부파일 - Middleware // hook, 선처리
