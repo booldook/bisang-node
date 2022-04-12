@@ -7,7 +7,7 @@ const { pool } = require('../../modules/mysql-init');
 
 // 회원가입
 router.get('/', (req, res, next) => {
-  res.send('회원가입폼')
+  res.render('auth/join')
 });
 
 // 회원저장
