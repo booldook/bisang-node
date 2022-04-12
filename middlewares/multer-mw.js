@@ -6,8 +6,10 @@ const fs = require('fs-extra');
 const multer = require('multer');
 const moment = require('moment');
 const createError = require('http-errors');
-const { allowFileExt, allowImageExt, STORE } = require('../modules/utils');
+const { allowFileExt, allowImageExt, STORE, getExt } = require('../modules/utils');
 const mega = 1024000;
+
+
 
 /* Storage */
 const destination = async (req, file, cb) => {
@@ -23,7 +25,8 @@ const destination = async (req, file, cb) => {
 
 const filename = async (req, file, cb) => {
   try {
-    const ext = path.extname(file.originalname).toLowerCase().replace('.', '') // .JPG -> .jpg -> jpg
+    // const ext = path.extname(file.originalname).toLowerCase().replace('.', '') 
+    const ext = getExt(file.originalname);
     const filename = moment().format('YYYY-MM-DD') + '_' + uuidv4() + '.' + ext;
     cb(null, filename);
   }
@@ -34,8 +37,14 @@ const filename = async (req, file, cb) => {
 
 const fileFilter = (req, file, cb) => {
   try {
-    cb(null, true);
-    // cb(null, false);
+    const ext = getExt(file.originalname);
+    const allow = allowImageExt.includes(ext);
+    if (allow) cb(null, true);
+    else {
+      req.multerFilter = 'denied';
+      cb(null, false);
+    }
+    // else cb(new Error('업로드 할 수 없는 파일입니다.'));
   }
   catch(err) {
     cb(err)

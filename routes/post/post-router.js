@@ -16,7 +16,7 @@ const createError = require('http-errors');
 const moment = require('moment');
 const { pool } = require('../../modules/mysql-init');
 const { isAdmin, isUser } = require('../../middlewares/auth-mw');
-const { getIsoDate } = require('../../modules/utils')
+const { getIsoDate, alert } = require('../../modules/utils')
 
 const multer  = require('multer');
 const { pathExists } = require('fs-extra');
@@ -39,9 +39,14 @@ router.post('/', isUser, uploader.single('upfile'), async (req, res, next) => {
       values.push(req.file.filename);
       values.push(req.file.size);
     }
-    const rs = await pool.execute(sql, values);
-    // res.json(req.file);
-    res.redirect('/posts');
+    if(req.multerFilter) {
+      res.send(alert('업로드 할 수 없는 파일입니다.', '/post'));
+    }
+    else {
+      const rs = await pool.execute(sql, values);
+      // res.json(req.file);
+      res.redirect('/posts');
+    }
   }
   catch(err) {
     next(createError(500, err))
