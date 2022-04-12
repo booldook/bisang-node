@@ -12,8 +12,10 @@ const { mw1, mw2 } = require('./middlewares/middleware');
 /* require router */
 const postsRouter = require('./routes/post/posts-router');
 const postRouter = require('./routes/post/post-router');
-const notFoundRouter = require('./routes/error/err404-router')
-const errorRouter = require('./routes/error/err-router')
+const joinRouter = require('./routes/auth/join-router');
+const authRouter = require('./routes/auth/auth-router');
+const notFoundRouter = require('./routes/error/err404-router');
+const errorRouter = require('./routes/error/err-router');
 
 /* view init */
 app.set('view engine', 'ejs');
@@ -61,6 +63,8 @@ app.use(logger());
 
 app.use('/posts', postsRouter);
 app.use('/post', postRouter);
+app.use('/join', joinRouter);
+app.use('/auth', authRouter);
 
 /* Error Router */
 app.use(notFoundRouter);
