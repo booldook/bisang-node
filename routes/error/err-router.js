@@ -1,4 +1,5 @@
-module.exports = ({status, message}, req, res, next) => {
+module.exports = (err, req, res, next) => {
+  const {status = 500, message = 'Unknown Error'} = err;
   res.send(`
   <h1>Error</h1>
   <hr>

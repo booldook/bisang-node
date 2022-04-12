@@ -5,6 +5,7 @@ const path = require('path');
 const fs = require('fs-extra');
 const multer = require('multer');
 const moment = require('moment');
+const createError = require('http-errors');
 const { allowFileExt, allowImageExt, STORE } = require('../modules/utils');
 const mega = 1024000;
 
@@ -27,7 +28,7 @@ const filename = async (req, file, cb) => {
     cb(null, filename);
   }
   catch(err) {
-    cb(err);
+    cb(err);  // next(new Error(err))
   }
 }
 
