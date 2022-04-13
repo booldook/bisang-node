@@ -42,8 +42,15 @@
   </table>
   <div class="text-center my-3">
     <button class="btn btn-primary" onclick="location.href='/posts'">리스트</button>
-    <button class="btn btn-danger">삭제</button>
-    <button class="btn btn-info">수정</button>
+    <% if(user && user.idx === user_idx) { %>
+      <form method="POST" action="/post" style="display: inline;">
+        <input type="hidden" name="_method" value="delete">
+        <input type="hidden" name="idx" value="<%= idx %>">
+        <button class="btn btn-danger">삭제</button>
+      </form>
+    <% } %>
+    
+    <!-- <button class="btn btn-info">수정</button> -->
   </div>
 </div>
 

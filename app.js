@@ -9,7 +9,8 @@ const app = express();
 const logger = require('./middlewares/logger-mw')
 const { mw1, mw2 } = require('./middlewares/middleware');
 const expressSession = require('./middlewares/session-mw');
-const local = require('./middlewares/local-mw')
+const local = require('./middlewares/local-mw');
+const methodOverride = require('./middlewares/method-mw')
 
 /* require router */
 const postsRouter = require('./routes/post/posts-router');
@@ -32,6 +33,9 @@ app.use(express.urlencoded({ extended: false }));
 
 /* session */
 app.use(expressSession(app));
+
+/* method-override */
+app.use(methodOverride);
 
 /* locals 에 session 정보 전달 */
 app.use(local);

@@ -86,6 +86,16 @@ router.get('/download/:idx', async (req, res, next) => {  // 다운로드 구현
   }
 });
 
+router.delete('/', isMine, async (req, res, next) => {
+  try {
+    const removeSql = 'DELETE FROM posts WHERE idx=?';
+    // const [rs] = await pool.execute(removeSql, [req.body.idx]);
+  }
+  catch(err) {
+
+  }
+})
+
 
 router.get('/:idx/update', (req, res, next) => {
   res.send('게시글수정');
@@ -99,8 +109,6 @@ router.put('/:idx', (req, res, next) => {
   res.send('게시글수정저장');
 })
 
-router.delete('/:idx', (req, res, next) => {
-  res.send('게시글삭제');
-})
+
 
 module.exports = router;
