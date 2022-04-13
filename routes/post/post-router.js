@@ -30,23 +30,20 @@ router.get('/', isUser, (req, res, next) => {
 
 router.post('/', isUser, uploader.single('upfile'), async (req, res, next) => {
   try {
-    const { title, writer, content } = req.body;
-    let sql = 'INSERT INTO post SET title=?, writer=?, content=?, wdate=?';
-    let values = [title, writer, content, new Date() ];
-    if(req.file) {
-      sql += ', oriname=?, savename=?, filesize=?';
-      values.push(req.file.originalname);
-      values.push(req.file.filename);
-      values.push(req.file.size);
-    }
     if(req.multerFilter) {
       res.send(alert('업로드 할 수 없는 파일입니다.', '/post'));
     }
-    else {
-      const rs = await pool.execute(sql, values);
-      // res.json(req.file);
-      res.redirect('/posts');
+    const { title, writer, content } = req.body;
+    const postSql = 'INSERT INTO posts SET title=?, writer=?, content=?, user_idx=?';
+    const postValues = [title, writer, content, req.session.user.idx ];
+    const [{ insertId }] = await pool.execute(postSql, postValues);
+    if(req.file) {
+      const { originalname, filename, size } = req.file;
+      const fileSql = 'INSERT INTO files SET oriname=?, savename=?, filesize=?, post_idx=?';
+      const fileValues = [originalname, filename, size, insertId];
+      const [rs] = await pool.execute(sql, values);
     }
+    res.redirect('/posts');
   }
   catch(err) {
     next(createError(500, err))
