@@ -20,5 +20,6 @@ const alert = (msg, loc = '/') => {
 }
 
 const imgPath = fileName => '/uploads/' + fileName.split('_')[0].split('-').join('/') + '/' + fileName;
+const imgPathAbs = fileName => path.join(__dirname, '../', '/storages/' + fileName.split('_')[0].split('-').join('/') + '/' + fileName);
 
-module.exports = { getIsoDate, allowFileExt, allowImageExt, STORE, getExt, alert, imgPath };
+module.exports = { getIsoDate, allowFileExt, allowImageExt, STORE, getExt, alert, imgPath, imgPathAbs };

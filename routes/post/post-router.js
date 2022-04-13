@@ -16,7 +16,7 @@ const createError = require('http-errors');
 const moment = require('moment');
 const { pool } = require('../../modules/mysql-init');
 const { isAdmin, isUser } = require('../../middlewares/auth-mw');
-const { getIsoDate, alert, imgPath } = require('../../modules/utils')
+const { getIsoDate, alert, imgPath, imgPathAbs } = require('../../modules/utils')
 
 const multer  = require('multer');
 const { pathExists } = require('fs-extra');
@@ -68,7 +68,24 @@ router.get('/:idx', async (req, res, next) => {
   catch(err) {
     next(createError(500, err))
   }
-})
+});
+
+router.get('/download/:idx', async (req, res, next) => {  // 다운로드 구현
+  try {
+    const sql = 'SELECT oriname, savename FROM files WHERE idx=?';
+    const [rs] = await pool.execute(sql, [req.params.idx]);
+    if(rs.length) {
+      const { savename, oriname } = rs[0];
+      // res.json({ oriname, savename });
+      res.download(imgPathAbs(savename), oriname);
+    }
+    else next(createError(403, '잘못된 접근입니다.'))
+  }
+  catch (err) {
+    next(createError(500, err))
+  }
+});
+
 
 router.get('/:idx/update', (req, res, next) => {
   res.send('게시글수정');
