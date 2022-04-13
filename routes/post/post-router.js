@@ -10,12 +10,13 @@ semantic ULR
 */
 
 const path = require('path');
+const fs = require('fs-extra');
 const express = require('express');
 const router = express.Router();
 const createError = require('http-errors');
 const moment = require('moment');
 const { pool } = require('../../modules/mysql-init');
-const { isAdmin, isUser } = require('../../middlewares/auth-mw');
+const { isAdmin, isUser, isMine } = require('../../middlewares/auth-mw');
 const { getIsoDate, alert, imgPath, imgPathAbs } = require('../../modules/utils')
 
 const multer  = require('multer');
@@ -86,13 +87,19 @@ router.get('/download/:idx', async (req, res, next) => {  // 다운로드 구현
   }
 });
 
-router.delete('/', isMine, async (req, res, next) => {
+router.delete('/', isMine('DELETE'), async (req, res, next) => {
   try {
+    const fileSql = 'SELECT savename FROM files WHERE post_idx=?';
+    const [rs] = await pool.execute(fileSql, [req.body.idx]);
+    if(rs.length && rs[0].savename) {
+      await fs.remove(imgPathAbs(rs[0].savename));
+    }
     const removeSql = 'DELETE FROM posts WHERE idx=?';
-    // const [rs] = await pool.execute(removeSql, [req.body.idx]);
+    const [rs2] = await pool.execute(removeSql, [req.body.idx]);
+    res.redirect('/');
   }
   catch(err) {
-
+    next(createError(500, err))
   }
 })
 
@@ -108,7 +115,5 @@ router.post('/', (req, res, next) => {
 router.put('/:idx', (req, res, next) => {
   res.send('게시글수정저장');
 })
-
-
 
 module.exports = router;
