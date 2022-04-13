@@ -146,4 +146,4 @@ dist
 *.vsix
 
 # booldook
-storages/*
+storages/

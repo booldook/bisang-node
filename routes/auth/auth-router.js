@@ -17,16 +17,24 @@ router.post('/', loginValidator, async (req, res, next) => {
   try {
     const { userid, userpw } = req.body;
     const { BCRYPT_SALT } = process.env;
-    const sqlUser = 'SELECT userpw FROM users WHERE userid=?';
+    const sqlUser = 'SELECT * FROM users WHERE userid=?';
     const [rs] = await pool.execute(sqlUser, [userid]);
     if(rs.length) {
       const compare = await bcrypt.compare(userpw + BCRYPT_SALT, rs[0].userpw);
-      // 세션처리
-      res.json({ result: 'success' })
+      if(compare) {
+        req.session.user = {
+          idx: rs[0].idx,
+          userid: rs[0].userid,
+          username: rs[0].username,
+          email: rs[0].email,
+          grade: rs[0].grade,
+        }
+        res.redirect('/');
+      }
+      else res.status(200).send(alert('아이디와 패스워드를 확인하세요.', '/auth'));
     }
     else {
-      // 없음
-      res.json({ err: 'ERR' })
+      res.status(200).send(alert('아이디와 패스워드를 확인하세요.', '/auth'));
     }
   } 
   catch (err) {
