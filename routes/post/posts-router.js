@@ -9,7 +9,7 @@ const { isUser } = require('../../middlewares/auth-mw');
 const pagerFn = require('../../modules/pager-init');
 const { imgPath } = require('../../modules/utils');
 
-router.get(['/', '/:page'], logger('common', 'access-posts.log'), isUser, async (req, res, next) => {
+router.get(['/', '/:page'], logger('common', 'access-posts.log'), async (req, res, next) => {
   try {
     // const startIdx = ((Number(req.params.page) || 1) - 1) * 2;
     // const sql = 'SELECT * FROM post ORDER BY idx DESC LIMIT ?, 2';

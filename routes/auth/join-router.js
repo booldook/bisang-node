@@ -3,17 +3,18 @@ const express = require('express');
 const createError = require('http-errors');
 const router = express.Router();
 const { alert } = require('../../modules/utils');
+const { isUser, isGuest } = require('../../middlewares/auth-mw');
 const { pool } = require('../../modules/mysql-init');
 const joinValidator = require('../../middlewares/join-mw');
 const moment = require('moment');
 
 // 회원가입
-router.get('/', (req, res, next) => {
+router.get('/', isGuest, (req, res, next) => {
   res.render('auth/join')
 });
 
 // 회원저장
-router.post('/', joinValidator, async (req, res, next) => {
+router.post('/', isGuest, joinValidator, async (req, res, next) => {
   try {
     const { userid, userpw, username, email } = req.body;
     const sql = 'INSERT INTO users SET userid=?, userpw=?, username=?, email=?';
