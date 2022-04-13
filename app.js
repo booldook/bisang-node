@@ -9,6 +9,7 @@ const app = express();
 const logger = require('./middlewares/logger-mw')
 const { mw1, mw2 } = require('./middlewares/middleware');
 const expressSession = require('./middlewares/session-mw');
+const local = require('./middlewares/local-mw')
 
 /* require router */
 const postsRouter = require('./routes/post/posts-router');
@@ -31,6 +32,9 @@ app.use(express.urlencoded({ extended: false }));
 
 /* session */
 app.use(expressSession(app));
+
+/* locals 에 session 정보 전달 */
+app.use(local);
 
 
 // 로그인, 인증, 로그, 세션/쿠키, 첨부파일 - Middleware // hook, 선처리

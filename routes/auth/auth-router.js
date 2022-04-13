@@ -44,7 +44,10 @@ router.post('/', loginValidator, async (req, res, next) => {
 
 // 로그아웃처리
 router.get('/logout', (req, res, next) => {
-  res.send('로그아웃')
+  req.session.destroy(() => {
+    res.locals.user = {};
+    res.status(200).send(alert('로그아웃 되었습니다.','/'));
+  });
 });
 
 module.exports = router;
