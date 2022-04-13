@@ -7,6 +7,7 @@ const { pool } = require('../../modules/mysql-init');
 const logger = require('../../middlewares/logger-mw');
 const { isUser } = require('../../middlewares/auth-mw');
 const pagerFn = require('../../modules/pager-init');
+const { imgPath } = require('../../modules/utils');
 
 router.get(['/', '/:page'], logger('common', 'access-posts.log'), isUser, async (req, res, next) => {
   try {
@@ -19,15 +20,21 @@ router.get(['/', '/:page'], logger('common', 'access-posts.log'), isUser, async 
     // })
     // res.json(rs);
     // res.render('post/list', { title: req.myName, posts  })
-    const pagerSql = 'SELECT count(idx) AS cnt FROM post';
+    const pagerSql = 'SELECT count(idx) AS cnt FROM posts';
     const [[{ cnt }]] = await pool.execute(pagerSql);
     const pager = pagerFn(req.params.page || 1, cnt, 3, 3);
-    const listSql = 'SELECT * FROM post ORDER BY idx DESC LIMIT ?, ?';
+    const listSql = `
+      SELECT p.*, f.idx AS f_idx, f.savename 
+      FROM posts AS p LEFT JOIN files AS f
+        ON p.idx = f.post_idx
+      ORDER BY p.idx DESC LIMIT ?, ?`;
     const [rs] = await pool.execute(listSql, [ pager.startIdx, pager.listCnt ]);
     const posts = rs.map(v => {
       v.wdate = moment(v.wdate).format('YYYY-MM-DD');
+      v.src = v.savename ? imgPath(v.savename) : '/img/gallery.png';
       return v;
     });
+    // res.json(rs);
     res.status(200).render('post/list', { title: 'TITLE', posts, ...pager })
   }
   catch(err) {

@@ -16,7 +16,7 @@ const createError = require('http-errors');
 const moment = require('moment');
 const { pool } = require('../../modules/mysql-init');
 const { isAdmin, isUser } = require('../../middlewares/auth-mw');
-const { getIsoDate, alert } = require('../../modules/utils')
+const { getIsoDate, alert, imgPath } = require('../../modules/utils')
 
 const multer  = require('multer');
 const { pathExists } = require('fs-extra');
@@ -41,7 +41,7 @@ router.post('/', isUser, uploader.single('upfile'), async (req, res, next) => {
       const { originalname, filename, size } = req.file;
       const fileSql = 'INSERT INTO files SET oriname=?, savename=?, filesize=?, post_idx=?';
       const fileValues = [originalname, filename, size, insertId];
-      const [rs] = await pool.execute(sql, values);
+      const [rs] = await pool.execute(fileSql, fileValues);
     }
     res.redirect('/posts');
   }
@@ -53,9 +53,15 @@ router.post('/', isUser, uploader.single('upfile'), async (req, res, next) => {
 router.get('/:idx', async (req, res, next) => {
   try {
     // 여기를 구현
-    const sql = 'SELECT * FROM post WHERE idx=?';
+    const sql = `
+    SELECT p.*, f.idx AS f_idx, f.oriname, f.savename 
+    FROM posts AS p LEFT JOIN files AS f 
+      ON p.idx = f.post_idx
+    WHERE p.idx=?`;
     const [[rs]] = await pool.execute(sql, [req.params.idx]);
+    // res.json(rs);
     rs.wdate = getIsoDate(rs.wdate);
+    rs.src = rs.savename ? imgPath(rs.savename) : '';
     res.render('post/view', { ...rs });
     // res.json(rs);
   }

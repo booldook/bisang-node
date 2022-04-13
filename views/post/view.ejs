@@ -29,6 +29,15 @@
         <td class="title">작성일</td>
         <td class="content"><%= wdate %></td>
       </tr>
+      <% if(src) { %>
+        <tr>
+          <td class="title">첨부파일</td>
+          <td class="content">
+            <p><%= oriname %></p>
+            <img src="<%= src %>" style="max-width: 100%;">
+          </td>
+        </tr>
+      <% } %>
     </tbody>
   </table>
   <div class="text-center my-3">
