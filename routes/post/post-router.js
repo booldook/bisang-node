@@ -18,9 +18,9 @@ const moment = require('moment');
 const { pool } = require('../../modules/mysql-init');
 const { isAdmin, isUser, isMine } = require('../../middlewares/auth-mw');
 const { getIsoDate, alert, imgPath, imgPathAbs } = require('../../modules/utils')
-
-const multer  = require('multer');
 const { pathExists } = require('fs-extra');
+
+// const multer  = require('multer');
 // const uploader = multer({ dest: path.join(__dirname, '../../', '/storages') })
 const uploader = require('../../middlewares/multer-mw');
 
