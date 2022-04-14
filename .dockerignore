@@ -74,9 +74,6 @@ web_modules/
 
 # dotenv environment variable files
 .env
-.env.dev
-.env.test
-.env.prod
 .env.development.local
 .env.test.local
 .env.production.local
@@ -147,4 +144,4 @@ dist
 
 # booldook
 storages/
-.idea
+.git
